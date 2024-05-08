@@ -1,0 +1,20 @@
+[workspace]
+members = ["circuits", "proof"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["teddav <https://github.com/teddav>"]
+homepage = "https://github.com/teddav"
+repository = "https://github.com/teddav"
+description = "Easy setup for Halo2 circuits"
+categories = ["cryptography"]
+keywords = ["halo2", "proofs", "zkp", "zkSNARKs"]
+
+[workspace.dependencies]
+halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v0.3.0" }
+halo2_solidity_verifier = { git = "https://github.com/privacy-scaling-explorations/halo2-solidity-verifier", version = "0.1.0", features = ["evm"] }
+rand = "0.8.5"
+
+halo2-starter-proof = { path = "proof" }

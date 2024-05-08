@@ -1,0 +1,15 @@
+[package]
+name = "halo2-starter-circuits"
+
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+homepage.workspace = true
+repository.workspace = true
+description.workspace = true
+categories.workspace = true
+keywords.workspace = true
+
+[dependencies]
+halo2_proofs.workspace = true
+halo2-starter-proof.workspace = true
