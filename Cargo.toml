@@ -14,7 +14,13 @@ keywords = ["halo2", "proofs", "zkp", "zkSNARKs"]
 
 [workspace.dependencies]
 halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v0.3.0" }
-halo2_solidity_verifier = { git = "https://github.com/privacy-scaling-explorations/halo2-solidity-verifier", version = "0.1.0", features = ["evm"] }
+halo2_solidity_verifier = { git = "https://github.com/privacy-scaling-explorations/halo2-solidity-verifier", rev = "f0626be", features = [
+    "evm",
+] }
 rand = "0.8.5"
 
 halo2-starter-proof = { path = "proof" }
+halo2-starter-circuits = { path = "circuits" }
+
+[patch.'https://github.com/privacy-scaling-explorations/halo2.git']
+halo2_proofs = { path = "./halo2pse/halo2_proofs" }

@@ -9,17 +9,19 @@ description.workspace = true
 categories.workspace = true
 keywords.workspace = true
 
-default-run = "prove"
+# default-run = "prove"
 
-[[bin]]
-name = "prove"
-path = "src/prove.rs"
+# [[bin]]
+# name = "prove"
+# path = "src/prove.rs"
 
-[[bin]]
-name = "verify"
-path = "src/verify.rs"
+# [[bin]]
+# name = "verify"
+# path = "src/verify.rs"
 
 [dependencies]
 halo2_proofs.workspace = true
-halo2_solidity_verifier = { workspace = true, features = ["evm"] }
+halo2_solidity_verifier.workspace = true
 rand.workspace = true
+
+halo2-starter-circuits.workspace = true

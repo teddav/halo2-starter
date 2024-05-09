@@ -12,4 +12,3 @@ keywords.workspace = true
 
 [dependencies]
 halo2_proofs.workspace = true
-halo2-starter-proof.workspace = true

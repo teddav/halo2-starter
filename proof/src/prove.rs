@@ -1,6 +1,4 @@
 use halo2_proofs::{
-    circuit::Value,
-    dev::MockProver,
     halo2curves::bn256::{Bn256, Fr as Fp, G1Affine},
     plonk::{create_proof, keygen_pk, keygen_vk, Circuit, Error, ProvingKey, VerifyingKey},
     poly::kzg::{
@@ -29,10 +27,14 @@ pub fn generate_params(
     Ok((params, pk, vk))
 }
 
-pub fn full_proof(k: u32, circuit: impl Circuit<Fp>) {
-    let public_value = Fp::from(7);
-    let (params, pk, vk) = generate_params(k, &circuit).unwrap();
+pub fn generate_proof(
+    params: &ParamsKZG<Bn256>,
+    pk: &ProvingKey<G1Affine>,
+    circuit: impl Circuit<Fp>,
+    public_inputs: &[Fp],
+) -> Result<Vec<u8>, Error> {
     let mut transcript = Keccak256Transcript::new(vec![]);
+
     create_proof::<
         KZGCommitmentScheme<Bn256>,
         ProverSHPLONK<Bn256>,
@@ -44,14 +46,11 @@ pub fn full_proof(k: u32, circuit: impl Circuit<Fp>) {
         &params,
         &pk,
         &[circuit],
-        [[[public_value].as_ref()].as_ref()].as_ref(),
+        [[public_inputs].as_ref()].as_ref(),
         OsRng,
         &mut transcript,
-    )
-    .unwrap();
-    let proof = transcript.finalize();
-}
+    )?;
 
-fn main() {
-    println!("hello");
+    let proof = transcript.finalize();
+    Ok(proof)
 }
