@@ -32,13 +32,10 @@ impl Circuit<Fp> for DummyCircuit {
         meta.enable_equality(advice);
         meta.enable_equality(instance);
 
-        let lookup_table1 = meta.fixed_column();
-        meta.enable_constant(lookup_table1);
+        let lookup_table = meta.fixed_column();
+        meta.enable_constant(lookup_table);
 
-        let lookup_table2 = meta.fixed_column();
-        meta.enable_constant(lookup_table2);
-        let rangecheck_config =
-            RangeCheckChip::configure(meta, advice, lookup_table1, lookup_table2);
+        let rangecheck_config = RangeCheckChip::configure(meta, advice, lookup_table);
 
         DummyCircuitConfig {
             advice,
@@ -58,7 +55,7 @@ impl Circuit<Fp> for DummyCircuit {
                 for (i, v) in (0..10).into_iter().enumerate() {
                     region.assign_fixed(
                         || "assign value in lookup table",
-                        config.rangecheck_config.lookup_table1,
+                        config.rangecheck_config.lookup_table,
                         i,
                         || Value::known(Fp::from(v as u64)),
                     )?;

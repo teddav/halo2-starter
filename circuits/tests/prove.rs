@@ -7,8 +7,9 @@ fn prove_mock() {
         a: Value::known(Fp::from(3)),
         b: Value::known(Fp::from(4)),
     };
+    let public_value = Fp::from(7);
 
     let k = 4;
-    let prover = MockProver::run(k, &circuit, vec![vec![Fp::from(7)]]).unwrap();
+    let prover = MockProver::run(k, &circuit, vec![vec![public_value]]).unwrap();
     assert!(prover.verify().is_ok());
 }
