@@ -6,18 +6,15 @@ resolver = "2"
 version = "0.1.0"
 edition = "2021"
 authors = ["teddav <https://github.com/teddav>"]
-homepage = "https://github.com/teddav"
-repository = "https://github.com/teddav"
-description = "Easy setup for Halo2 circuits"
+homepage = "https://github.com/teddav/halo2-starter"
+repository = "https://github.com/teddav/halo2-starter"
+description = "Easy setup for Halo2 ZK circuits"
 categories = ["cryptography"]
-keywords = ["halo2", "proofs", "zkp", "zkSNARKs"]
+keywords = ["halo2", "cryptography", "zkp", "zero-knowledge"]
 
 [workspace.dependencies]
 halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v0.3.0" }
-halo2_solidity_verifier = { git = "https://github.com/privacy-scaling-explorations/halo2-solidity-verifier", rev = "f0626be", features = [
-    "evm",
-] }
-rand = "0.8.5"
+halo2_solidity_verifier = { git = "https://github.com/privacy-scaling-explorations/halo2-solidity-verifier", rev = "f0626be" }
 
 halo2-starter-proof = { path = "proof" }
 halo2-starter-circuits = { path = "circuits" }

@@ -11,7 +11,7 @@ pub struct DummyCircuit {
     pub b: Value<Fp>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct DummyCircuitConfig {
     advice: Column<Advice>,
     instance: Column<Instance>,
@@ -32,9 +32,13 @@ impl Circuit<Fp> for DummyCircuit {
         meta.enable_equality(advice);
         meta.enable_equality(instance);
 
-        let lookup_table = meta.fixed_column();
-        meta.enable_constant(lookup_table);
-        let rangecheck_config = RangeCheckChip::configure(meta, advice, lookup_table);
+        let lookup_table1 = meta.fixed_column();
+        meta.enable_constant(lookup_table1);
+
+        let lookup_table2 = meta.fixed_column();
+        meta.enable_constant(lookup_table2);
+        let rangecheck_config =
+            RangeCheckChip::configure(meta, advice, lookup_table1, lookup_table2);
 
         DummyCircuitConfig {
             advice,
@@ -51,12 +55,12 @@ impl Circuit<Fp> for DummyCircuit {
         layouter.assign_region(
             || "load lookup table",
             |mut region| {
-                for i in 0..9 {
+                for (i, v) in (0..10).into_iter().enumerate() {
                     region.assign_fixed(
                         || "assign value in lookup table",
-                        config.rangecheck_config.lookup_table,
+                        config.rangecheck_config.lookup_table1,
                         i,
-                        || Value::known(Fp::from(i as u64)),
+                        || Value::known(Fp::from(v as u64)),
                     )?;
                 }
                 Ok(())

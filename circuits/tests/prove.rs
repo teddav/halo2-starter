@@ -10,6 +10,5 @@ fn prove_mock() {
 
     let k = 4;
     let prover = MockProver::run(k, &circuit, vec![vec![Fp::from(7)]]).unwrap();
-    println!("{prover:?}");
     assert!(prover.verify().is_ok());
 }
