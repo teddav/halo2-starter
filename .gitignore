@@ -1,4 +1,7 @@
 **/target/
 **/Cargo.lock
 /output/
+/circuits/layout.png
+
 /halo2pse/
+/halo2-solidity-verifier/

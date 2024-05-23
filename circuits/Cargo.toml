@@ -12,3 +12,4 @@ keywords.workspace = true
 
 [dependencies]
 halo2_proofs.workspace = true
+plotters = "0.3.6"

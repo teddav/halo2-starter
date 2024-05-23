@@ -13,7 +13,10 @@ categories = ["cryptography"]
 keywords = ["halo2", "cryptography", "zkp", "zero-knowledge"]
 
 [workspace.dependencies]
-halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v0.3.0" }
+halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v0.3.0", features = [
+    "dev-graph",
+    "plotters",
+] }
 halo2_solidity_verifier = { git = "https://github.com/privacy-scaling-explorations/halo2-solidity-verifier", rev = "f0626be" }
 
 halo2-starter-proof = { path = "proof" }
@@ -21,3 +24,6 @@ halo2-starter-circuits = { path = "circuits" }
 
 [patch.'https://github.com/privacy-scaling-explorations/halo2.git']
 halo2_proofs = { path = "./halo2pse/halo2_proofs" }
+
+[patch.'https://github.com/privacy-scaling-explorations/halo2-solidity-verifier']
+halo2_solidity_verifier = { path = "./halo2-solidity-verifier" }
