@@ -1,4 +1,4 @@
-use std::fs::File;
+use std::{fs::File, io::BufWriter};
 
 use anyhow::{anyhow, Result};
 use halo2_proofs::{
@@ -12,6 +12,7 @@ use halo2_proofs::{
         },
     },
     transcript::TranscriptWriterBuffer,
+    SerdeFormat,
 };
 use halo2_solidity_verifier::Keccak256Transcript;
 use rand::rngs::OsRng;
@@ -22,6 +23,8 @@ use crate::save_to_file;
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProofFile {
     pub proof: String,
+    pub key: String,
+    pub params: String,
 }
 
 pub fn generate_params(
@@ -49,6 +52,7 @@ pub fn generate_params(
     };
     let vk = keygen_vk(&params, circuit)?;
     let pk = keygen_pk(&params, vk.clone(), circuit)?;
+
     Ok((params, pk, vk))
 }
 
@@ -80,10 +84,28 @@ pub fn generate_proof(
     Ok(proof)
 }
 
-pub fn save_proof_to_file(proof: &Vec<u8>, filename: &str) -> Result<()> {
-    let serialized_proof = format!("0x{}", hex::encode(proof));
+fn params_kzg_to_bytes(params: ParamsKZG<Bn256>) -> Result<Vec<u8>> {
+    let mut buf = Vec::with_capacity(10000);
+    {
+        let mut stream = BufWriter::new(&mut buf);
+        params.write(&mut stream)?;
+    }
+    Ok(buf)
+}
+
+pub fn save_proof_to_file(
+    proof: &Vec<u8>,
+    pk: ProvingKey<G1Affine>,
+    params: ParamsKZG<Bn256>,
+    filename: &str,
+) -> Result<()> {
+    let pk = pk.to_bytes(SerdeFormat::RawBytes);
+    let params = params_kzg_to_bytes(params)?;
+
     let to_json = serde_json::to_string(&ProofFile {
-        proof: serialized_proof,
+        proof: format!("0x{}", hex::encode(proof)),
+        key: format!("0x{}", hex::encode(pk)),
+        params: format!("0x{}", hex::encode(params)),
     })?;
     save_to_file(to_json.to_string().as_bytes(), filename)?;
     Ok(())

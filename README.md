@@ -4,7 +4,9 @@ This repo will help you start building ZK circuits with [Halo2](https://zcash.gi
 
 We'll be using the [fork from PSE](https://github.com/privacy-scaling-explorations/halo2/).
 
-If you need a tutorial on building circuits, checkout how to rebuild [Tornado Cash with Halo2](https://dev.to/teddav/tornado-cash-with-halo2-62b).
+> [!TIP]
+> If you’re a beginner and trying to learn the basics of developing with Halo2, check out my beginner tutorial where I’ll teach you [how to rewrite TornadoCash with Halo2](https://dev.to/teddav/tornado-cash-with-halo2-62b)
+> https://github.com/teddav/tornado-halo2
 
 # Prerequisite
 You need to have [Rust installed](https://rustup.rs/)
@@ -38,4 +40,13 @@ When calling `generate_params()` you can specify a Powers of Tau file, or just g
 cargo run --example generate_proof
 cargo run --example verify_proof
 cargo run --example generate_verifier_solidity
+```
+
+# Graph
+https://zcash.github.io/halo2/user/dev-tools.html
+
+```
+Instance columns have a white background.
+Advice columns have a red background.
+Fixed columns have a blue background.
 ```
