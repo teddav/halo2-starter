@@ -13,7 +13,11 @@ categories = ["cryptography"]
 keywords = ["halo2", "cryptography", "zkp", "zero-knowledge"]
 
 [workspace.dependencies]
-halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2.git", tag = "v0.3.0", features = [
+# halo2_proofs = { git = "https://github.com/teddav/halo2", branch = "feat-forge-proof-mockprover", features = [
+#     "dev-graph",
+#     "plotters",
+# ] }
+halo2_proofs = { git = "https://github.com/privacy-scaling-explorations/halo2", tag = "v0.3.0", features = [
     "dev-graph",
     "plotters",
 ] }

@@ -98,7 +98,7 @@ pub fn save_proof_to_file(
     pk: ProvingKey<G1Affine>,
     params: ParamsKZG<Bn256>,
     filename: &str,
-) -> Result<()> {
+) -> Result<String> {
     let pk = pk.to_bytes(SerdeFormat::RawBytes);
     let params = params_kzg_to_bytes(params)?;
 
@@ -107,6 +107,6 @@ pub fn save_proof_to_file(
         key: format!("0x{}", hex::encode(pk)),
         params: format!("0x{}", hex::encode(params)),
     })?;
-    save_to_file(to_json.to_string().as_bytes(), filename)?;
-    Ok(())
+    let out = save_to_file(to_json.to_string().as_bytes(), filename)?;
+    Ok(out)
 }

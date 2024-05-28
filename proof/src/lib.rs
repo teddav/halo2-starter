@@ -35,8 +35,11 @@ pub fn output_path(filename: &str) -> Result<PathBuf> {
     Ok(output)
 }
 
-pub fn save_to_file(data: &[u8], filename: &str) -> Result<()> {
-    let out = output_path(filename)?;
-    File::create(out)?.write_all(data)?;
-    Ok(())
+pub fn save_to_file(data: &[u8], filename: &str) -> Result<String> {
+    let out: PathBuf = output_path(filename)?;
+    File::create(out.clone())?.write_all(data)?;
+    Ok(out
+        .to_str()
+        .ok_or(anyhow!("can't convert output path to str"))?
+        .to_owned())
 }

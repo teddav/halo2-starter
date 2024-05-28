@@ -14,7 +14,9 @@ fn main() -> Result<()> {
 
     let (params, pk, _) = generate_params(k, &circuit, Some("./proof/ptau/hermez-raw-15"))?;
     let proof = generate_proof(&params, &pk, circuit, [public_value].as_ref())?;
-    save_proof_to_file(&proof, pk, params, "proof.json")?;
+
+    let out = save_proof_to_file(&proof, pk, params, "proof.json")?;
+    println!("Proof successfully saved to {out}");
 
     Ok(())
 }

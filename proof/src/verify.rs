@@ -21,8 +21,11 @@ pub fn generate_verifier_solidity(k: u32, circuit: &impl Circuit<Fp>) -> Result<
     let generator = SolidityGenerator::new(&params, &vk, Bdfg21, 1);
     let (verifier_solidity, vk_solidity) = generator.render_separately().unwrap();
 
-    save_to_file(verifier_solidity.as_bytes(), "Verifier.sol")?;
-    save_to_file(vk_solidity.as_bytes(), "VerifyingKey.sol")?;
+    let out = save_to_file(verifier_solidity.as_bytes(), "Verifier.sol")?;
+    println!("Verifier successfully saved to {out}");
+
+    let out = save_to_file(vk_solidity.as_bytes(), "VerifyingKey.sol")?;
+    println!("VerifierKey successfully saved to {out}");
 
     Ok(())
 }

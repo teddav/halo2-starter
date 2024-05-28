@@ -24,5 +24,7 @@ fn main() -> Result<()> {
         &mut transcript,
     )?;
 
+    println!("Proof successfully verified!");
+
     Ok(())
 }
