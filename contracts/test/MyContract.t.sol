@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
+
+import {Test, stdJson, console} from "forge-std/Test.sol";
+import {MyContract, IVerifier} from "../src/MyContract.sol";
+import {Halo2Verifier} from "../src/Verifier.sol";
+import {Halo2VerifyingKey} from "../src/VerifyingKey.sol";
+
+contract MyContractTest is Test {
+    using stdJson for string;
+
+    MyContract public mycontract;
+
+    function setUp() public {
+        Halo2Verifier verifier = new Halo2Verifier();
+        Halo2VerifyingKey verifyingKey = new Halo2VerifyingKey();
+
+        mycontract = new MyContract(address(verifier), address(verifyingKey));
+    }
+
+    function test_Verify() public view {
+        // bytes memory proof = hex"20bf057e654231975c7cff2bbba53e1cc2789f41b78089f7e92e229ee2429e0c133bc50d984cc48269eede33964d2f4cc46cfd11bee403f8626855aa7f065b850fe314681a83816e89b48a382e223a16215573345634d1abc14679167d8a9c5b1aeec159827c5f5b8b5f58b445919e3c97984973a61eb157eec88d2d5d22299e2b7123ed54cb64ca6b77236baf9fc90f19535cd26740c83ecf97885a327bd84020864415b85bae1956b28753b4ebe827d6548a47a52024256096359248bec1702acc1c68f95c81bb6c3d4ea53e43dbb6bc109f4787b78d3cf4551577f58b2bb408a44fb18e4d7bedede3b4c2866aa731295daf160c45d3ac521c46f1f6129fa025003b5a8c18a12dc8f4a25e85ad2cb3b246a7756c21909ca972b866ab6076852e7754daf504d4c85fe47ffba0fef601d056118ee3878996230ff66115fe396b0d3690f93fe5153a6a9321b78ca17301d5e60ec17b230e975eb5a284b6de123e1f0089f325a80ffecf6d2b1fb5346b5bbd8bce01bd21401425667fc4f07c97c508a404c616d14d60ea22b69725a1345090eae0098300990f688ff3dc78d1cf760020e002c458dda032962c12414243f35bd0277a9715eebe2d40ec4e2bc36cc607dd0eb33b3e37cc3914dbbafc696865b12c1c775ee606c8aae5c8ab4e7f448b0fc738d73dba45a6492d6cd7c2e23f26bffbbde06cdaa7778f848c9af61c61a02c07f279718eaa46abb7ab8c9f5c9074dcc251b40cc153f1f56a2435c8939f4821539ff524df377fb9cfd15d691ad7b75beaa1807d3128c067b1487af54c187716252ac87b15d5a98c5783739d590bff218618e926c754e6f329bcf8b5722c0d010eb41c870b76b282e9c7b5fe3cb75fb2ad34ee3bf80215467c07d677dcae721cbc6916e86e35ed223336abf2f27cf3145b4cd53d0cd3272a4530db7eac3a260cb9a74af2e865fccbab3b0accd24a4d7097d7794208c14b22cc48d2f0c5b6311b55089d8211fe1ebcc4738ba3d895b21d3c911c66e79981db3d6af91982f0ae2c8346adfa4490bc41e3e7d19b839d1fb4422e484fee3a0d7fe1c5d1bf94774613d5019d80cc3da952d60b36d61a0567cc2ac7ec8ddc47c8efcf6d2c0bc48c48194d3a8630e87651be2e0be0ab3cca3cd0b51900ddcaa2e671a976be06b900272b5c343630993e1b1e7f96e1e3fe7558c88ea4038f1bd812bea1e2101279debb115d08eee5a77b6b8c1fd076bdee96fc7d3c4d451f72c8b84735e4247b4887961a0f758f1bdae7eca53764a03c3e8ffa79c314e6b0b54c849162342680fa085f2c62f77b6c0698144dfa5d5d0f43eba96c55eee6c583efa8c2a64d4c580261d40b2da608ea2a8198feb035b6f29a61b4899a844d630d4205e76473deb3b13b8525a143e12771ca780c290aacb06ead1fe9c1b44ceecd0b58211f2a3e16f3eeff03bc3550c2bf80952acc84d5b1114da0cf92af2ac1c9bc5b6f807ac33ec40bbb087c67a0aba24186699e0b3dc6f3bc91347e3ced9aa61c64685c730f5fc53e7007430d9e8ed0b08e1effa4dd15b367d28e989339278bec1c67accdba59d6e2612fc7c6452816165f6cc71aa9133b9916a53cb382c3d771dfdb14f45b53b0fa072b432864700bff9876b90c3a3d9ff1fb098e66dd8a465c8c6ad2e0c5818cc71f";
+        string memory proofFile = vm.readFile("../output/proof.json");
+        bytes memory proof = proofFile.readBytes(".proof");
+
+        uint256[] memory instances = new uint256[](1);
+        instances[0] = 7;
+
+        bool verification = mycontract.verifyProof(proof, instances);
+        require(verification, "Proof verification failed");
+    }
+}

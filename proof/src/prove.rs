@@ -60,9 +60,14 @@ pub fn generate_proof(
     params: &ParamsKZG<Bn256>,
     pk: &ProvingKey<G1Affine>,
     circuit: impl Circuit<Fp>,
-    public_inputs: &[Fp],
+    public_inputs: Vec<Vec<Fp>>,
 ) -> Result<Vec<u8>> {
     let mut transcript = Keccak256Transcript::new(vec![]);
+
+    let instances = &(public_inputs
+        .iter()
+        .map(|instance| instance.as_slice())
+        .collect::<Vec<&[Fp]>>());
 
     create_proof::<
         KZGCommitmentScheme<Bn256>,
@@ -75,7 +80,7 @@ pub fn generate_proof(
         &params,
         &pk,
         &[circuit],
-        [[public_inputs].as_ref()].as_ref(),
+        &[instances],
         OsRng,
         &mut transcript,
     )?;
@@ -84,7 +89,7 @@ pub fn generate_proof(
     Ok(proof)
 }
 
-fn params_kzg_to_bytes(params: ParamsKZG<Bn256>) -> Result<Vec<u8>> {
+fn params_kzg_to_bytes(params: &ParamsKZG<Bn256>) -> Result<Vec<u8>> {
     let mut buf = Vec::with_capacity(10000);
     {
         let mut stream = BufWriter::new(&mut buf);
@@ -95,8 +100,8 @@ fn params_kzg_to_bytes(params: ParamsKZG<Bn256>) -> Result<Vec<u8>> {
 
 pub fn save_proof_to_file(
     proof: &Vec<u8>,
-    pk: ProvingKey<G1Affine>,
-    params: ParamsKZG<Bn256>,
+    pk: &ProvingKey<G1Affine>,
+    params: &ParamsKZG<Bn256>,
     filename: &str,
 ) -> Result<String> {
     let pk = pk.to_bytes(SerdeFormat::RawBytes);

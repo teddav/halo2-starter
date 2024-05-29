@@ -3,31 +3,28 @@ use std::{fs::File, io::BufReader};
 use anyhow::{anyhow, Result};
 use halo2_proofs::{
     halo2curves::bn256::{Bn256, Fr as Fp, G1Affine},
-    plonk::{Circuit, ProvingKey},
+    plonk::{Circuit, ProvingKey, VerifyingKey},
     poly::{commitment::Params, kzg::commitment::ParamsKZG},
     SerdeFormat,
 };
 use halo2_solidity_verifier::{BatchOpenScheme::Bdfg21, SolidityGenerator};
 
-use crate::{
-    output_path,
-    prove::{generate_params, ProofFile},
-    save_to_file,
-};
+use crate::{output_path, prove::ProofFile, save_to_file};
 
-pub fn generate_verifier_solidity(k: u32, circuit: &impl Circuit<Fp>) -> Result<()> {
-    let (params, _, vk) = generate_params(k, circuit, None).unwrap();
-
+pub fn generate_verifier_solidity(
+    params: &ParamsKZG<Bn256>,
+    vk: &VerifyingKey<G1Affine>,
+) -> Result<(String, String)> {
     let generator = SolidityGenerator::new(&params, &vk, Bdfg21, 1);
     let (verifier_solidity, vk_solidity) = generator.render_separately().unwrap();
 
-    let out = save_to_file(verifier_solidity.as_bytes(), "Verifier.sol")?;
-    println!("Verifier successfully saved to {out}");
+    let verifier_solidity =
+        verifier_solidity.replace(") public returns (bool)", ") public view returns (bool)");
 
-    let out = save_to_file(vk_solidity.as_bytes(), "VerifyingKey.sol")?;
-    println!("VerifierKey successfully saved to {out}");
+    let out1 = save_to_file(verifier_solidity.as_bytes(), "Verifier.sol")?;
+    let out2 = save_to_file(vk_solidity.as_bytes(), "VerifyingKey.sol")?;
 
-    Ok(())
+    Ok((out1, out2))
 }
 
 pub fn read_proof_from_file<C: Circuit<Fp>>(

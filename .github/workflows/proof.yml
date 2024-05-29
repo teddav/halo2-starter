@@ -1,0 +1,30 @@
+name: proof
+
+on: [push]
+
+jobs:
+  generate-proof:
+    name: Generate proof and run contracts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Rust
+        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+      - run: echo "${CARGO_HOME:-$HOME/.cargo}/bin" >> $GITHUB_PATH
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Generate proof
+        run: cargo run --example generate_proof
+
+      - name: Generate verifier contracts
+        run: cargo run --example generate_verifier_solidity
+
+      - name: Copy verifiers to "contracts"
+        run: cp output/Verifier.sol output/VerifyingKey.sol contracts/src
+
+      - name: Run Forge tests
+        run: cd contracts && forge test -vvvv

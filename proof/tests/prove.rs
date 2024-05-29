@@ -21,7 +21,7 @@ fn generate_verify_proof() {
     let public_value = Fp::from(7);
 
     let (params, pk, vk) = generate_params(k, &circuit, None).unwrap();
-    let proof = generate_proof(&params, &pk, circuit, [public_value].as_ref()).unwrap();
+    let proof = generate_proof(&params, &pk, circuit, vec![vec![public_value]]).unwrap();
 
     let strategy = SingleStrategy::new(&params);
     let mut transcript = Keccak256Transcript::new(proof.as_slice());
