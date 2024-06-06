@@ -15,7 +15,7 @@ pub fn generate_verifier_solidity(
     params: &ParamsKZG<Bn256>,
     vk: &VerifyingKey<G1Affine>,
 ) -> Result<(String, String)> {
-    let generator = SolidityGenerator::new(&params, &vk, Bdfg21, 1);
+    let generator = SolidityGenerator::new(params, vk, Bdfg21, 1);
     let (verifier_solidity, vk_solidity) = generator.render_separately().unwrap();
 
     let verifier_solidity =
